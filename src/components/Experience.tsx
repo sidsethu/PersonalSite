@@ -47,7 +47,7 @@ export function Experience() {
             className="rounded-2xl border border-gray-200 dark:border-gray-700 p-8"
           >
             <div className="text-center">
-              <h4 className="text-xl font-semibold mb-6">Product Management (1+ Year)</h4>
+              <h4 className="text-xl font-semibold mb-6">Product Management (3+ Years)</h4>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {productSkills.map((skill) => (
