@@ -46,8 +46,10 @@ export function Experience() {
             viewport={{ once: true }}
             className="rounded-2xl border border-gray-200 dark:border-gray-700 p-8"
           >
-            <h4 className="text-xl font-semibold mb-6">Product Management (1+ Year)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="text-center">
+              <h4 className="text-xl font-semibold mb-6">Product Management (1+ Year)</h4>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               {productSkills.map((skill) => (
                 <div key={skill.name} className="flex items-center gap-x-2">
                   <CheckCircleIcon className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
@@ -67,8 +69,10 @@ export function Experience() {
             viewport={{ once: true }}
             className="rounded-2xl border border-gray-200 dark:border-gray-700 p-8"
           >
-            <h4 className="text-xl font-semibold mb-6">Systems Engineering (4 Years)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="text-center">
+              <h4 className="text-xl font-semibold mb-6">Systems Engineering (4 Years)</h4>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               {engineeringSkills.map((skill) => (
                 <div key={skill.name} className="flex items-center gap-x-2">
                   <CheckCircleIcon className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />

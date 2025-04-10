@@ -38,7 +38,7 @@ export function Contact() {
           </a>
 
           <a
-            href="https://linkedin.com/in/yourusername"
+            href="https://linkedin.com/in/sidsethu"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"

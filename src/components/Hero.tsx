@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export function Hero() {
   return (
@@ -13,6 +14,17 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
+          <div className="flex justify-center mb-8">
+            <div className="relative h-32 w-32 sm:h-40 sm:w-40">
+              <Image
+                src="/profile.jpg"
+                alt="Sidharth Sethu"
+                className="rounded-full object-cover"
+                fill
+                priority
+              />
+            </div>
+          </div>
           <h2 className="text-base font-semibold leading-7 text-indigo-600 dark:text-indigo-400">
             Hello, I&apos;m
           </h2>
@@ -38,7 +50,7 @@ export function Hero() {
           </div>
           <div className="mt-10 flex justify-center space-x-6">
             <a
-              href="https://linkedin.com/in/yourusername"
+              href="https://linkedin.com/in/sidsethu"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
@@ -49,7 +61,7 @@ export function Hero() {
               </svg>
             </a>
             <a
-              href="https://github.com/yourusername"
+              href="https://github.com/sidsethu"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"

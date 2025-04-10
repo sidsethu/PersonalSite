@@ -30,14 +30,28 @@ export function About() {
             viewport={{ once: true }}
             className="relative rounded-2xl border border-gray-200 dark:border-gray-700 p-8 shadow-sm"
           >
-            <div className="flex items-center gap-x-4">
+            <div className="flex flex-col items-center gap-y-4">
               <BriefcaseIcon className="h-12 w-12 text-indigo-600 dark:text-indigo-400" />
-              <div>
+              <div className="text-center">
                 <h3 className="text-lg font-semibold">Experience</h3>
                 <p className="mt-1 text-gray-600 dark:text-gray-400">5+ years</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Product & Engineering</p>
               </div>
             </div>
+            <ul className="mt-4 space-y-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+              <li className="flex items-center justify-center">
+                <span className="mr-2">•</span>
+                <span>Namma Yatri - Product Manager</span>
+              </li>
+              <li className="flex items-center justify-center">
+                <span className="mr-2">•</span>
+                <span>Juspay - Product Manager</span>
+              </li>
+              <li className="flex items-center justify-center">
+                <span className="mr-2">•</span>
+                <span>Unisys India - Systems Engineer</span>
+              </li>
+            </ul>
           </motion.div>
 
           <motion.div
@@ -47,9 +61,9 @@ export function About() {
             viewport={{ once: true }}
             className="relative rounded-2xl border border-gray-200 dark:border-gray-700 p-8 shadow-sm"
           >
-            <div className="flex items-center gap-x-4">
+            <div className="flex flex-col items-center gap-y-4">
               <AcademicCapIcon className="h-12 w-12 text-indigo-600 dark:text-indigo-400" />
-              <div>
+              <div className="text-center">
                 <h3 className="text-lg font-semibold">Education</h3>
                 <p className="mt-1 text-gray-600 dark:text-gray-400">MBA (IIT Bombay)</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">B.Tech. (CSE)</p>
@@ -64,7 +78,7 @@ export function About() {
             viewport={{ once: true }}
             className="relative rounded-2xl border border-gray-200 dark:border-gray-700 p-8 shadow-sm sm:col-span-2 lg:col-span-1"
           >
-            <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-6">
+            <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-6 text-justify">
               I&apos;m a tech enthusiast with a penchant for solving complex problems and improving productivity. 
               During my MBA at IIT Bombay, I focused on Finance and Information Technology, achieving notable successes 
               in corporate and B-School competitions. Previously, I worked for four years as a Systems Engineer at 
