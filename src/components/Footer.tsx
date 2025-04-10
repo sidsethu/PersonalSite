@@ -10,6 +10,14 @@ const navigation = [
 ]
 
 export function Footer() {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <footer className="bg-white dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -18,6 +26,7 @@ export function Footer() {
             <Link
               key={item.name}
               href={item.href}
+              onClick={(e) => handleClick(e, item.href)}
               className="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
             >
               {item.name}

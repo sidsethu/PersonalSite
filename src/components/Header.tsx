@@ -11,6 +11,14 @@ const navigation = [
 ]
 
 export function Header() {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -26,6 +34,7 @@ export function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={(e) => handleClick(e, item.href)}
                   className="px-3 py-2 rounded-md text-sm font-medium hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   {item.name}
