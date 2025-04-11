@@ -52,9 +52,9 @@ export function Hero() {
             </Link>
             <Link
               href="/cv.pdf"
-              className="text-sm font-semibold leading-6 text-gray-900 dark:text-white"
+              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
-              Download CV <span aria-hidden="true">→</span>
+              Download CV
             </Link>
           </div>
           <div className="mt-10 flex justify-center space-x-6">
