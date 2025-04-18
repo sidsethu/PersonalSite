@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 const navigation = [
   { name: 'About', href: '#about' },
-  { name: 'Experience', href: '#experience' },
+  { name: 'Skills', href: '#skills' },
   { name: 'Projects', href: '#projects' },
   { name: 'Contact', href: '#contact' },
 ]
@@ -20,9 +20,9 @@ export function Header() {
     }
   }
 
-  return (
+  return (  
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <nav className="mx-auto max-w-7xl pl-2 pr-4 sm:pl-4 sm:pr-6 lg:pl-6 lg:pr-8">
         <div className="flex h-16 items-center">
           <div className="flex items-center space-x-4">
             <div className="relative h-8 w-8 rounded-full overflow-hidden">
