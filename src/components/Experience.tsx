@@ -19,9 +19,9 @@ const engineeringSkills = [
   { name: 'Git', level: 'Intermediate' },
 ]
 
-export function Experience() {
+export function Skills() {
   return (
-    <section id="experience" className="py-24">
+    <section id="skills" className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -31,10 +31,10 @@ export function Experience() {
           className="text-center"
         >
           <h2 className="text-base font-semibold leading-7 text-indigo-600 dark:text-indigo-400">
-            Explore My
+            My
           </h2>
           <h3 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            Experience
+            Skills
           </h3>
         </motion.div>
 
