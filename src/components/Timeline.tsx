@@ -65,124 +65,244 @@ const timelineItems: TimelineItem[] = [
 
 export function Timeline() {
   const [selectedItem, setSelectedItem] = useState<TimelineItem | null>(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const tickerRef = useRef<HTMLDivElement>(null)
+  const [isPaused, setIsPaused] = useState(false);
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
+  // Calculate total duration based on number of items (faster now)
+  const baseScrollDuration = 18; // increased from 12 for slower speed
+  const scrollDuration = baseScrollDuration + (timelineItems.length * 1);
+
+  // Handle pause/resume of animation on hover
+  const pauseAnimation = () => setIsPaused(true);
+  const resumeAnimation = () => {
+    if (!isUserScrolling) {
+      setIsPaused(false);
+    }
+  };
+
+  // Handle manual scrolling
+  const handleScrollStart = () => {
+    if (scrollContainerRef.current) {
+      setLastScrollPosition(scrollContainerRef.current.scrollLeft);
+    }
+    setIsUserScrolling(true);
+    setIsPaused(true);
+  };
+
+  const handleScrollEnd = () => {
+    // Resume auto-scrolling after a delay
+    setTimeout(() => {
+      setIsUserScrolling(false);
+      if (!isPaused) {
+        resumeAnimation();
+      }
+    }, 1500);
+  };
+
+  // Track if user is actively scrolling
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
     const handleScroll = () => {
-      const itemWidth = scrollContainer.scrollWidth / timelineItems.length;
-      const index = Math.min(
-        Math.max(0, Math.round(scrollContainer.scrollLeft / itemWidth)),
-        timelineItems.length - 1
-      );
-      setCurrentIndex(index);
+      if (isUserScrolling) {
+        setLastScrollPosition(container.scrollLeft);
+      }
     };
 
-    scrollContainer.addEventListener('scroll', handleScroll);
-    return () => scrollContainer.removeEventListener('scroll', handleScroll);
-  }, []);
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [isUserScrolling]);
 
   return (
-    <div className="relative py-12">
+    <div className="relative py-16">
+      <style jsx global>{`
+        @keyframes ticker {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%); /* Move to show the second set */
+          }
+        }
+        
+        .ticker-container {
+          overflow-x: auto;
+          white-space: nowrap;
+          position: relative;
+          width: 100%;
+          padding-top: 1rem;
+          padding-bottom: 2rem; /* Increased padding to prevent cropping */
+          min-height: 220px; /* Set minimum height to prevent content cropping */
+          cursor: grab;
+        }
+        
+        .ticker-container:active {
+          cursor: grabbing;
+        }
+        
+        .ticker {
+          display: inline-block;
+          animation: ticker ${scrollDuration}s linear infinite;
+        }
+        
+        .ticker.paused {
+          animation-play-state: paused;
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+
+        .separator {
+          display: inline-block;
+          width: 3px;
+          height: 100px; /* Tall enough to be visible */
+          margin: 0 2rem;
+          background: linear-gradient(to bottom, transparent, rgba(79, 70, 229, 0.6) 30%, rgba(79, 70, 229, 0.6) 70%, transparent);
+        }
+      `}</style>
+
+      {/* Ticker Container */}
       <div 
         ref={scrollContainerRef}
-        className="overflow-x-auto pb-4 scroll-smooth no-scrollbar"
+        className="ticker-container no-scrollbar"
         style={{
           scrollbarWidth: 'none', /* Firefox */
           msOverflowStyle: 'none', /* IE and Edge */
         }}
+        onMouseEnter={pauseAnimation}
+        onMouseLeave={resumeAnimation}
+        onMouseDown={handleScrollStart}
+        onTouchStart={handleScrollStart}
+        onMouseUp={handleScrollEnd}
+        onTouchEnd={handleScrollEnd}
       >
-        <style jsx global>{`
-          /* Hide scrollbar for Chrome, Safari and Opera */
-          .no-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
-        <div className="flex space-x-16 min-w-max px-8">
-          {timelineItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: (timelineItems.length - 1 - index) * 0.1 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center cursor-pointer relative pb-8 pt-4"
-              onClick={() => setSelectedItem(item)}
-            >
-              <motion.div 
-                className="relative w-20 h-20 mb-4 mt-2"
-                whileHover={{ scale: 1.25 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        {/* Ticker that moves */}
+        <div 
+          ref={tickerRef}
+          className={`ticker ${isPaused ? 'paused' : ''}`}
+        >
+          {/* First set of timeline items */}
+          <div className="inline-flex items-center space-x-16 px-8">
+            {timelineItems.map((item) => (
+              <motion.div
+                key={`original-${item.id}`}
+                className="flex flex-col items-center cursor-pointer relative pb-8 pt-4"
+                onClick={() => setSelectedItem(item)}
               >
-                <div className="absolute -inset-1 rounded-full border-4 border-black dark:border-white" />
-                <Image
-                  src={item.logo}
-                  alt={item.title}
-                  className="rounded-full object-cover p-1"
-                  fill
-                />
-                <motion.div
-                  className="absolute inset-0 rounded-full bg-indigo-600/0"
-                  whileHover={{ backgroundColor: "rgba(79, 70, 229, 0.1)" }}
-                  transition={{ duration: 0.2 }}
-                />
-              </motion.div>
-              <div className="text-center mb-4">
-                <h4 className="text-lg font-semibold">{item.title}</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{item.date}</p>
-              </div>
-              
-              {/* Timeline dot */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
-                {/* Pulsing circle */}
-                <motion.div
-                  className="absolute -inset-2 rounded-full border-2 border-indigo-600 dark:border-indigo-400"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 0.2, 0.5],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
+                <motion.div 
+                  className="relative w-20 h-20 mb-4 mt-2"
+                  whileHover={{ scale: 1.25 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <div className="absolute -inset-1 rounded-full border-4 border-black dark:border-white" />
+                  <Image
+                    src={item.logo}
+                    alt={item.title}
+                    className="rounded-full object-cover p-1"
+                    fill
+                  />
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-indigo-600/0"
+                    whileHover={{ backgroundColor: "rgba(79, 70, 229, 0.1)" }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </motion.div>
+                <div className="text-center mb-4">
+                  <h4 className="text-lg font-semibold">{item.title}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{item.date}</p>
+                </div>
                 
-                {/* Main dot */}
-                <div className="relative w-3 h-3 rounded-full bg-indigo-600 dark:bg-indigo-400" />
-              </div>
-            </motion.div>
-          ))}
+                {/* Timeline dot */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
+                  {/* Pulsing circle */}
+                  <motion.div
+                    className="absolute -inset-2 rounded-full border-2 border-indigo-600 dark:border-indigo-400"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 0.2, 0.5],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  
+                  {/* Main dot */}
+                  <div className="relative w-3 h-3 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+                </div>
+              </motion.div>
+            ))}
+            
+            {/* Separator between sets */}
+            <div className="separator" aria-hidden="true"></div>
+          </div>
+          
+          {/* Duplicate set of timeline items for seamless looping */}
+          <div className="inline-flex items-center space-x-16 px-8">
+            {timelineItems.map((item) => (
+              <motion.div
+                key={`duplicate-${item.id}`}
+                className="flex flex-col items-center cursor-pointer relative pb-8 pt-4"
+                onClick={() => setSelectedItem(item)}
+              >
+                <motion.div 
+                  className="relative w-20 h-20 mb-4 mt-2"
+                  whileHover={{ scale: 1.25 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <div className="absolute -inset-1 rounded-full border-4 border-black dark:border-white" />
+                  <Image
+                    src={item.logo}
+                    alt={item.title}
+                    className="rounded-full object-cover p-1"
+                    fill
+                  />
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-indigo-600/0"
+                    whileHover={{ backgroundColor: "rgba(79, 70, 229, 0.1)" }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </motion.div>
+                <div className="text-center mb-4">
+                  <h4 className="text-lg font-semibold">{item.title}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{item.date}</p>
+                </div>
+                
+                {/* Timeline dot */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
+                  {/* Pulsing circle */}
+                  <motion.div
+                    className="absolute -inset-2 rounded-full border-2 border-indigo-600 dark:border-indigo-400"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 0.2, 0.5],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  
+                  {/* Main dot */}
+                  <div className="relative w-3 h-3 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+                </div>
+              </motion.div>
+            ))}
+            
+            {/* Another separator at the end */}
+            <div className="separator" aria-hidden="true"></div>
+          </div>
         </div>
-      </div>
-
-      {/* Swipe Indicator Dots */}
-      <div className="flex justify-center space-x-3 mt-6">
-        {timelineItems.map((_, index) => (
-          <motion.div
-            key={index}
-            initial={false}
-            animate={{
-              width: index === currentIndex ? 24 : 8,
-              opacity: index === currentIndex ? 1 : 0.5,
-              scale: index === currentIndex ? 1 : 0.8
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 20
-            }}
-            className={`h-2 rounded-full ${
-              index === currentIndex 
-                ? 'bg-indigo-600 dark:bg-indigo-400' 
-                : 'bg-gray-300 dark:bg-gray-600'
-            }`}
-          />
-        ))}
       </div>
 
       {selectedItem && (
