@@ -4,8 +4,17 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Typewriter } from 'react-simple-typewriter'
+import React, { useState } from 'react'
+import CVModal from './CVModal'
+import { AppConfig } from '../config'
 
 export function Hero() {
+  const [isCVModalOpen, setIsCVModalOpen] = useState(false)
+  const cvPdfUrl = AppConfig.cvPdfUrl
+
+  const openModal = () => setIsCVModalOpen(true)
+  const closeModal = () => setIsCVModalOpen(false)
+
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
     const element = document.querySelector(href)
@@ -60,18 +69,17 @@ export function Hero() {
             <Link
               href="#contact"
               onClick={(e) => handleClick(e, '#contact')}
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+              className="mr-4 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
               Contact Info
             </Link>
-            {/* Download CV button temporarily hidden
-            <Link
-              href="/cv.pdf"
+            <button
+              type="button"
+              onClick={openModal}
               className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400"
             >
-              Download CV
-            </Link>
-            */}
+              Preview CV
+            </button>
           </div>
           <div className="mt-10 flex justify-center space-x-6">
             <a
@@ -105,6 +113,7 @@ export function Hero() {
           </div>
         </motion.div>
       </div>
+      <CVModal isOpen={isCVModalOpen} onClose={closeModal} pdfUrl={cvPdfUrl} />
     </div>
   )
 } 
